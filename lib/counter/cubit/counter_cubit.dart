@@ -1,23 +1,23 @@
 import 'package:bloc/bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:counter_storage/counter_storage.dart';
 
 class CounterCubit extends Cubit<int> {
   CounterCubit() : super(0);
 
   static const _counterKey = '_counter';
 
-  late final SharedPreferences _sharedPreferences;
+  late final CounterStorage _counterStorage = CounterStorage();
 
-  init() async {
-    _sharedPreferences = await SharedPreferences.getInstance();
-    final counter = _sharedPreferences.getInt(_counterKey) ?? 0;
+  void init() async {
+    await _counterStorage.init();
+    final counter = _counterStorage.getInt(_counterKey);
 
     emit(counter);
   }
 
   void increment() {
     final next = state + 1;
-    _sharedPreferences.setInt(_counterKey, next);
+    _counterStorage.setInt(_counterKey, next);
 
     emit(next);
   }
