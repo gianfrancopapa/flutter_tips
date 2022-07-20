@@ -2,18 +2,14 @@ import 'package:bloc/bloc.dart';
 import 'package:counter_storage/counter_storage.dart';
 
 class CounterCubit extends Cubit<int> {
-  CounterCubit() : super(0);
+  CounterCubit({
+    required CounterStorage counterStorage,
+  })  : _counterStorage = counterStorage,
+        super(counterStorage.getInt(_counterKey));
 
   static const _counterKey = '_counter';
 
-  late final CounterStorage _counterStorage = CounterStorage();
-
-  void init() async {
-    await _counterStorage.init();
-    final counter = _counterStorage.getInt(_counterKey);
-
-    emit(counter);
-  }
+  final CounterStorage _counterStorage;
 
   void increment() {
     final next = state + 1;
